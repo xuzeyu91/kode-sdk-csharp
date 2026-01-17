@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <PackageId>Kode.Agent.Tools.Builtin</PackageId>
+    <Description>Built-in tools for Kode Agent SDK: file operations, shell commands, todo management</Description>
+    <PackageTags>ai;agent;tools;builtin</PackageTags>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Kode.Agent.Sdk\Kode.Agent.Sdk.csproj" />
+  </ItemGroup>
+
+</Project>

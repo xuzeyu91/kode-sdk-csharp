@@ -1,0 +1,29 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net10.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <LangVersion>preview</LangVersion>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="DotNetEnv"/>
+        <PackageReference Include="Microsoft.Extensions.Logging.Console"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\src\Kode.Agent.Sdk\Kode.Agent.Sdk.csproj"/>
+        <ProjectReference Include="..\..\src\Kode.Agent.Store.Json\Kode.Agent.Store.Json.csproj"/>
+        <ProjectReference Include="..\..\src\Kode.Agent.Tools.Builtin\Kode.Agent.Tools.Builtin.csproj"/>
+        <ProjectReference Include="..\..\src\Kode.Agent.Mcp\Kode.Agent.Mcp.csproj"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Update=".env">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+    </ItemGroup>
+
+</Project>

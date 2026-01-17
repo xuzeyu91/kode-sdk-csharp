@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <PackageId>Kode.Agent.Store.Json</PackageId>
+    <Description>JSON file-based storage implementation for Kode Agent SDK with WAL strategy</Description>
+    <PackageTags>ai;agent;storage;json;wal</PackageTags>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Kode.Agent.Sdk\Kode.Agent.Sdk.csproj" />
+  </ItemGroup>
+
+</Project>
