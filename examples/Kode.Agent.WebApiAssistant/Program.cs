@@ -107,21 +107,35 @@ try
     {
         name = "Kode.Agent WebApi Assistant",
         openai_compatible = true,
+        multi_turn_support = true,
         endpoints = new[]
         {
             "POST /v1/chat/completions",
+            "POST /{sessionId}/v1/chat/completions",
             "GET  /healthz"
+        },
+        headers = new
+        {
+            X_Session_Id = "Session ID for multi-turn conversations (request/response)"
         }
     }));
 
     app.MapGet("/healthz", () => Results.Ok(new {ok = true}));
 
+    // OpenAI-compatible chat completions endpoint
     app.MapPost("/v1/chat/completions",
         async (HttpContext httpContext, OpenAiChatCompletionRequest request, AssistantService service) =>
             await service.HandleChatCompletionsAsync(httpContext, request));
 
+    // Session-scoped chat completions endpoint (supports multi-turn conversations with explicit session ID)
+    app.MapPost("/{sessionId}/v1/chat/completions",
+        async (HttpContext httpContext, OpenAiChatCompletionRequest request, AssistantService service) =>
+            await service.HandleChatCompletionsAsync(httpContext, request));
+
     Log.Information("Kode.Agent WebApi Assistant started successfully");
-    Log.Information("Available endpoints: http://localhost:5123/v1/chat/completions");
+    Log.Information("Available endpoints:");
+    Log.Information("  POST http://localhost:5123/v1/chat/completions");
+    Log.Information("  POST http://localhost:5123/{{sessionId}}/v1/chat/completions");
     app.Run();
 }
 catch (Exception ex)

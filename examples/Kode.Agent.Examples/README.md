@@ -1,5 +1,7 @@
 # Kode.Agent.Examples (C#)
 
+> **中文版**: [查看中文 README](./README-zh.md)
+
 This project demonstrates the core workflows of the C# SDK. The overall example structure mirrors the TypeScript `examples/` in the repository root:
 
 - `examples/getting-started.ts` ↔ `GettingStarted.cs`

@@ -1,5 +1,7 @@
 # Kode Agent SDK (C#) API Reference
 
+> **中文版**: [API 文档 (中文)](./API_REFERENCE-zh.md)
+
 This document outlines common APIs, key types, and event models. Please refer to the source code for the most accurate information.
 
 ## Core Types

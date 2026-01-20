@@ -1,5 +1,7 @@
 # Kode.Agent WebApi Assistant (OpenAI Compatible)
 
+> **English version**: [Read the English README](./README.md)
+
 这个示例是一个 ASP.NET WebAPI 应用，对外暴露 OpenAI Chat Completions 兼容接口，并支持 SSE 流式输出。
 
 ## 架构概览
@@ -294,6 +296,91 @@ Skills: new SkillsConfig
 - `KODE_AGENT_DIR`：Agent 工作目录
 - `KODE_USER_DIR`：用户数据目录
 
+## 多轮对话支持
+
+WebApiAssistant 支持多轮对话，通过会话路由机制实现上下文连续性。
+
+### 会话路由方式
+
+有三种方式指定会话：
+
+1. **路径参数**：`/{sessionId}/v1/chat/completions`
+2. **请求头**：`X-Session-Id`
+3. **user 字段**：OpenAI 兼容的 `user` 字段作为 threadKey
+
+### 路由优先级
+
+1. **显式会话 ID**（路径或请求头）优先级最高，必须匹配已存在的会话
+2. **threadKey**（user 字段）：相同的 threadKey 会自动复用同一会话
+3. **自动默认会话**：无显式标识时，系统自动管理默认会话
+
+### 响应头
+
+每次响应都会返回会话 ID：
+- `X-Session-Id`：当前会话 ID
+
+### 多轮对话示例
+
+**第一轮**：获取会话 ID
+
+```bash
+curl http://localhost:5123/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -d '{
+    "messages":[{"role":"user","content":"我叫小明"}],
+    "stream":false
+  }' -i
+
+# 响应头包含：X-Session-Id: agt_xxx
+```
+
+**第二轮**：使用会话 ID 继续对话
+
+```bash
+curl http://localhost:5123/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -H "X-Session-Id: agt_xxx" \
+  -d '{
+    "messages":[{"role":"user","content":"我叫什么名字？"}],
+    "stream":false
+  }'
+
+# Agent 会记住上下文，回答"小明"
+```
+
+**或使用路径参数**：
+
+```bash
+curl http://localhost:5123/agt_xxx/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -d '{
+    "messages":[{"role":"user","content":"我叫什么名字？"}],
+    "stream":false
+  }'
+```
+
+**使用 threadKey（user 字段）**：
+
+```bash
+# 相同的 user 值会自动路由到同一会话
+curl http://localhost:5123/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -d '{
+    "user":"xiaoming-thread",
+    "messages":[{"role":"user","content":"记住我喜欢蓝色"}],
+    "stream":false
+  }'
+
+# 后续使用相同 user 值继续对话
+curl http://localhost:5123/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -d '{
+    "user":"xiaoming-thread",
+    "messages":[{"role":"user","content":"我喜欢什么颜色？"}],
+    "stream":false
+  }'
+```
+
 ## 示例请求
 
 注意：当前版本不允许客户端覆盖 `model`，如需携带 `model` 字段，请与服务端配置保持一致。
@@ -301,7 +388,7 @@ Skills: new SkillsConfig
 非流式：
 
 ```bash
-curl http://localhost:5000/v1/chat/completions \
+curl http://localhost:5123/v1/chat/completions \
   -H "Content-Type: application/json" \
   -d '{
     "model":"claude-sonnet-4-5-20250929",
@@ -317,7 +404,7 @@ curl http://localhost:5000/v1/chat/completions \
 流式（SSE）：
 
 ```bash
-curl http://localhost:5000/v1/chat/completions \
+curl http://localhost:5123/v1/chat/completions \
   -H "Content-Type: application/json" \
   -H "Accept: text/event-stream" \
   -d '{

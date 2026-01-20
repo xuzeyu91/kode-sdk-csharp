@@ -23,8 +23,9 @@ public static class AssistantTemplate
         IReadOnlyList<string>? skillsPaths = null,
         string? workDir = null)
     {
-        // Discover skills from directories or use defaults
-        var (autoActivateSkills, recommendedSkills) = SkillsDiscovery.DiscoverSkills(skillsPaths, workDir);
+        // Discover available skills from file system
+        // Note: Skills are no longer auto-activated. Agent will activate them on-demand via skill_activate.
+        var recommendedSkills = SkillsDiscovery.DiscoverSkills(skillsPaths, workDir);
 
         return new AgentTemplateDefinition
         {
@@ -52,7 +53,7 @@ public static class AssistantTemplate
                 },
                 Skills = new TemplateSkillsConfig
                 {
-                    AutoActivate = autoActivateSkills,
+                    AutoActivate = [],
                     Recommend = recommendedSkills
                 }
             }

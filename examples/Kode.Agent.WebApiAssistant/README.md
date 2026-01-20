@@ -1,5 +1,7 @@
 # Kode.Agent WebApi Assistant (OpenAI Compatible)
 
+> **中文版**: [查看中文 README](./README-zh.md)
+
 This example is an ASP.NET WebAPI application that exposes an OpenAI Chat Completions compatible interface with SSE streaming support.
 
 ## Architecture Overview
@@ -294,6 +296,91 @@ Inject environment variables for bash commands:
 - `KODE_AGENT_DIR`: Agent working directory
 - `KODE_USER_DIR`: User data directory
 
+## Multi-turn Conversation Support
+
+WebApiAssistant supports multi-turn conversations through session routing mechanism for context continuity.
+
+### Session Routing Methods
+
+There are three ways to specify a session:
+
+1. **Path parameter**: `/{sessionId}/v1/chat/completions`
+2. **Request header**: `X-Session-Id`
+3. **user field**: OpenAI-compatible `user` field as threadKey
+
+### Routing Priority
+
+1. **Explicit session ID** (path or header) has highest priority, must match an existing session
+2. **threadKey** (user field): Same threadKey automatically reuses the same session
+3. **Auto default session**: When no explicit identifier, system manages a default session automatically
+
+### Response Headers
+
+Each response returns the session ID:
+- `X-Session-Id`: Current session ID
+
+### Multi-turn Conversation Examples
+
+**First turn**: Get session ID
+
+```bash
+curl http://localhost:5123/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -d '{
+    "messages":[{"role":"user","content":"My name is Alice"}],
+    "stream":false
+  }' -i
+
+# Response headers include: X-Session-Id: agt_xxx
+```
+
+**Second turn**: Continue conversation with session ID
+
+```bash
+curl http://localhost:5123/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -H "X-Session-Id: agt_xxx" \
+  -d '{
+    "messages":[{"role":"user","content":"What is my name?"}],
+    "stream":false
+  }'
+
+# Agent remembers context, answers "Alice"
+```
+
+**Or use path parameter**:
+
+```bash
+curl http://localhost:5123/agt_xxx/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -d '{
+    "messages":[{"role":"user","content":"What is my name?"}],
+    "stream":false
+  }'
+```
+
+**Using threadKey (user field)**:
+
+```bash
+# Same user value automatically routes to the same session
+curl http://localhost:5123/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -d '{
+    "user":"alice-thread",
+    "messages":[{"role":"user","content":"Remember that I like blue"}],
+    "stream":false
+  }'
+
+# Later, use the same user value to continue
+curl http://localhost:5123/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -d '{
+    "user":"alice-thread",
+    "messages":[{"role":"user","content":"What color do I like?"}],
+    "stream":false
+  }'
+```
+
 ## Example Requests
 
 Note: Current version doesn't allow clients to override `model`. If you need to carry `model` field, keep it consistent with server configuration.
@@ -301,7 +388,7 @@ Note: Current version doesn't allow clients to override `model`. If you need to 
 Non-streaming:
 
 ```bash
-curl http://localhost:5000/v1/chat/completions \
+curl http://localhost:5123/v1/chat/completions \
   -H "Content-Type: application/json" \
   -d '{
     "model":"claude-sonnet-4-5-20250929",
@@ -317,7 +404,7 @@ curl http://localhost:5000/v1/chat/completions \
 Streaming (SSE):
 
 ```bash
-curl http://localhost:5000/v1/chat/completions \
+curl http://localhost:5123/v1/chat/completions \
   -H "Content-Type: application/json" \
   -H "Accept: text/event-stream" \
   -d '{

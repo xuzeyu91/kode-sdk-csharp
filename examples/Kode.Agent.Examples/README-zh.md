@@ -1,5 +1,7 @@
 # Kode.Agent.Examples (C#)
 
+> **English version**: [Read the English README](./README.md)
+
 这个项目用于演示 C# SDK 的核心链路，整体示例结构参考仓库根目录的 TypeScript `examples/`：
 
 - `examples/getting-started.ts` ↔ `GettingStarted.cs`

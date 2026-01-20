@@ -1,5 +1,7 @@
 # Kode Agent SDK 进阶指南
 
+> **English version**: [Advanced Guide (English)](./ADVANCED_GUIDE.md)
+
 本文档提供更深入的 SDK 使用说明和最佳实践。
 
 ## 目录
@@ -462,7 +464,7 @@ flowchart TD
     K -->|mutates/execute/write| I
     K -->|non-mutating| F
 
-    G --> L[发布 permission_required(control)]
+    G --> L[发布 permission_required（control）]
     L --> M{用户响应}
     M -->|批准| F
     M -->|拒绝| I

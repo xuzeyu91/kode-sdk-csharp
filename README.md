@@ -1,5 +1,7 @@
 # Kode Agent SDK for .NET
 
+> **中文版**: [查看中文 README](./README-zh.md)
+
 [![.NET](https://img.shields.io/badge/.NET-10.0-512BD4?logo=dotnet)](https://dotnet.microsoft.com/)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![NuGet](https://img.shields.io/badge/NuGet-coming%20soon-blue)](https://www.nuget.org/)
@@ -840,13 +842,13 @@ Join our WeChat group to discuss technical questions and best practices:
 
 ## Related Links
 
-| Link                                  | Description                            |
-| ------------------------------------- | ------------------------------- |
-| [Kode SDK (TypeScript)](../README.md) | TypeScript version of the SDK with feature parity |
-| [Example Projects](examples/)                 | Console and WebAPI examples          |
-| [Source Code](src/)                        | Core SDK implementation code               |
-| [Test Code](tests/)                    | Unit and integration tests                  |
-| [Changelog](CHANGELOG.md)              | Version update records                    |
+| Link                                                         | Description                            |
+| ------------------------------------------------------------ | ------------------------------- |
+| [Kode SDK (TypeScript)](https://github.com/shareAI-lab/kode-agent-sdk) | TypeScript version of the SDK with feature parity |
+| [Example Projects](examples/)                                | Console and WebAPI examples          |
+| [Source Code](src/)                                          | Core SDK implementation code               |
+| [Test Code](tests/)                                          | Unit and integration tests                  |
+| [Changelog](CHANGELOG.md)                                    | Version update records                    |
 
 ### Ecosystem
 

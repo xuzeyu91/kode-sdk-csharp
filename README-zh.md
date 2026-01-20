@@ -1,5 +1,7 @@
 # Kode Agent SDK for .NET
 
+> **English version**: [Read the English README](./README.md)
+
 [![.NET](https://img.shields.io/badge/.NET-10.0-512BD4?logo=dotnet)](https://dotnet.microsoft.com/)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![NuGet](https://img.shields.io/badge/NuGet-coming%20soon-blue)](https://www.nuget.org/)
@@ -840,13 +842,13 @@ MIT License
 
 ## 🔗 相关链接
 
-| 链接                                  | 描述                            |
-| ------------------------------------- | ------------------------------- |
-| [Kode SDK (TypeScript)](../README.md) | TypeScript 版本的 SDK，功能对等 |
-| [示例项目](examples/)                 | Console 和 WebAPI 示例          |
-| [源代码](src/)                        | 核心 SDK 实现代码               |
-| [测试代码](tests/)                    | 单元和集成测试                  |
-| [变更日志](CHANGELOG.md)              | 版本更新记录                    |
+| 链接                                                         | 描述                            |
+| ------------------------------------------------------------ | ------------------------------- |
+| [Kode SDK (TypeScript)](https://github.com/shareAI-lab/kode-agent-sdk) | TypeScript 版本的 SDK，功能对等 |
+| [示例项目](examples/)                                        | Console 和 WebAPI 示例          |
+| [源代码](src/)                                               | 核心 SDK 实现代码               |
+| [测试代码](tests/)                                           | 单元和集成测试                  |
+| [变更日志](CHANGELOG.md)                                     | 版本更新记录                    |
 
 ### 生态系统
 

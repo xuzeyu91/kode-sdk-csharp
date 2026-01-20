@@ -1,5 +1,7 @@
 # Kode Agent SDK (C#) API Reference
 
+> **English version**: [API Reference (English)](./API_REFERENCE.md)
+
 本文件概述常用 API、关键类型与事件模型；如有出入，以源码为准。
 
 ## Core Types

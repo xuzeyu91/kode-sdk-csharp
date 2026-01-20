@@ -1,5 +1,7 @@
 # Kode Agent SDK Advanced Guide
 
+> **中文版**: [进阶指南 (中文)](./ADVANCED_GUIDE-zh.md)
+
 This document provides in-depth SDK usage instructions and best practices.
 
 ## Table of Contents
@@ -460,7 +462,7 @@ flowchart TD
     K -->|mutates/execute/write| I
     K -->|non-mutating| F
 
-    G --> L[Publish permission_required(control)]
+    G --> L[Publish permission_required（control）]
     L --> M{User response}
     M -->|Approve| F
     M -->|Deny| I
