@@ -1,6 +1,6 @@
 import type { OpenAIChatRequest, OpenAIChatResponse } from '@/types';
 
-const API_BASE_URL = '/v1';
+const API_BASE_URL = 'http://localhost:5124';
 
 export class ApiService {
   /**
@@ -12,8 +12,8 @@ export class ApiService {
     stream: boolean = false
   ): Promise<OpenAIChatResponse> {
     const url = sessionId 
-      ? `/${sessionId}${API_BASE_URL}/chat/completions`
-      : `${API_BASE_URL}/chat/completions`;
+      ? `${API_BASE_URL}/${sessionId}/v1/chat/completions`
+      : `${API_BASE_URL}/v1/chat/completions`;
 
     const request: OpenAIChatRequest = {
       model: 'claude-sonnet-4',
@@ -55,8 +55,8 @@ export class ApiService {
     onError: (error: Error) => void
   ): Promise<void> {
     const url = sessionId 
-      ? `/${sessionId}${API_BASE_URL}/chat/completions`
-      : `${API_BASE_URL}/chat/completions`;
+      ? `${API_BASE_URL}/${sessionId}/v1/chat/completions`
+      : `${API_BASE_URL}/v1/chat/completions`;
 
     const request: OpenAIChatRequest = {
       model: 'claude-sonnet-4',

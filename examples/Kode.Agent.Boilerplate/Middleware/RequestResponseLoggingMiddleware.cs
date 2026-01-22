@@ -25,7 +25,8 @@ public class RequestResponseLoggingMiddleware
         await LogRequestAsync(context, requestId);
 
         // Check if this is a streaming request (chat completions with stream=true)
-        var isStreamingRequest = context.Request.Path.StartsWithSegments("/v1/chat/completions") && 
+        // Match both /v1/chat/completions and /{sessionId}/v1/chat/completions
+        var isStreamingRequest = context.Request.Path.Value?.Contains("/v1/chat/completions") == true && 
                                  context.Request.Method == "POST";
 
         if (isStreamingRequest)
