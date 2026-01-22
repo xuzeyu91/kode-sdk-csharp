@@ -1,13 +1,13 @@
 # Tool Events Streaming Guide
 
-## 概述
+## Overview
 
-此 API 现在支持在 Server-Sent Events (SSE) 流中发送 tool 调用事件，让前端可以实时监控 agent 的工具使用情况。
+This API now supports sending tool invocation events in Server-Sent Events (SSE) streams, allowing the frontend to monitor the agent's tool usage in real-time.
 
-## 事件类型
+## Event Types
 
-### 1. 文本内容事件
-标准的 OpenAI 格式文本流：
+### 1. Text Content Events
+Standard OpenAI format text stream:
 ```json
 {
   "id": "chatcmpl-xxx",
@@ -26,8 +26,8 @@
 }
 ```
 
-### 2. Tool 开始事件 (tool:start)
-当 agent 开始调用一个 tool 时发送：
+### 2. Tool Start Event (tool:start)
+Sent when the agent starts calling a tool:
 ```json
 {
   "id": "chatcmpl-xxx",
@@ -39,8 +39,8 @@
 }
 ```
 
-### 3. Tool 完成事件 (tool:end)
-当 tool 执行完成时发送：
+### 3. Tool Completion Event (tool:end)
+Sent when tool execution completes:
 ```json
 {
   "id": "chatcmpl-xxx",
@@ -53,8 +53,8 @@
 }
 ```
 
-### 4. Tool 错误事件 (tool:error)
-当 tool 执行出错时发送：
+### 4. Tool Error Event (tool:error)
+Sent when tool execution fails:
 ```json
 {
   "id": "chatcmpl-xxx",
@@ -68,16 +68,16 @@
 }
 ```
 
-## Tool 状态说明
+## Tool State Descriptions
 
-- **Pending**: Tool 调用已注册，等待执行
-- **Executing**: Tool 正在执行中
-- **Completed**: Tool 成功执行完成
-- **Failed**: Tool 执行失败
-- **Denied**: Tool 调用被权限控制拒绝
-- **Sealed**: Tool 执行已完全结束并记录
+- **Pending**: Tool invocation registered, waiting for execution
+- **Executing**: Tool is currently executing
+- **Completed**: Tool execution completed successfully
+- **Failed**: Tool execution failed
+- **Denied**: Tool invocation denied by permission control
+- **Sealed**: Tool execution fully ended and recorded
 
-## 前端使用示例
+## Frontend Usage Examples
 
 ### React/TypeScript 示例
 
@@ -140,13 +140,13 @@ const ChatComponent = () => {
           try {
             const json = JSON.parse(data);
             
-            // 检查是否是 tool 事件
+            // Check if it's a tool event
             if (json.event) {
               const toolEvent = json as ToolEvent;
               console.log(`Tool ${toolEvent.event}:`, toolEvent.tool_name);
               setToolCalls(prev => [...prev, toolEvent]);
             } 
-            // 否则是文本内容
+            // Otherwise it's text content
             else {
               const textChunk = json as TextChunk;
               const content = textChunk.choices[0]?.delta?.content;
@@ -181,7 +181,7 @@ const ChatComponent = () => {
 };
 ```
 
-### JavaScript 原生示例
+### Vanilla JavaScript Example
 
 ```javascript
 async function streamChatWithTools(message) {
@@ -214,7 +214,7 @@ async function streamChatWithTools(message) {
           const json = JSON.parse(data);
           
           if (json.event) {
-            // Tool 事件
+            // Tool events
             console.log(`[${json.event}] ${json.tool_name} (${json.state})`);
             if (json.error) {
               console.error(`  Error: ${json.error}`);
@@ -223,7 +223,7 @@ async function streamChatWithTools(message) {
               console.log(`  Duration: ${json.duration_ms}ms`);
             }
           } else if (json.choices) {
-            // 文本内容
+            // Text content
             const content = json.choices[0]?.delta?.content;
             if (content) {
               process.stdout.write(content);
@@ -238,17 +238,17 @@ async function streamChatWithTools(message) {
 }
 ```
 
-## 使用场景
+## Use Cases
 
-1. **实时进度展示**: 在 UI 中显示 agent 当前正在调用哪些工具
-2. **性能监控**: 追踪每个 tool 的执行时间
-3. **错误处理**: 实时捕获和展示 tool 执行错误
-4. **调试信息**: 帮助开发者理解 agent 的决策过程
+1. **Real-time Progress Display**: Show which tools the agent is currently calling in the UI
+2. **Performance Monitoring**: Track execution time for each tool
+3. **Error Handling**: Capture and display tool execution errors in real-time
+4. **Debug Information**: Help developers understand the agent's decision-making process
 
-## 注意事项
+## Notes
 
-1. 所有事件都通过 SSE 流发送，使用 `data:` 前缀
-2. Tool 事件与文本内容事件交错发送
-3. 可以通过 `event` 字段区分 tool 事件和文本内容
-4. Tool 事件的顺序保证：start → (executing) → end/error
-5. 同一个 tool 调用的 `tool_call_id` 在 start/end/error 事件中保持一致
+1. All events are sent through SSE stream with `data:` prefix
+2. Tool events are interleaved with text content events
+3. Tool events can be distinguished from text content via the `event` field
+4. Tool event order guarantee: start → (executing) → end/error
+5. The same tool invocation's `tool_call_id` remains consistent across start/end/error events

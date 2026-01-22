@@ -1,8 +1,8 @@
-# 测试 Tool Events 功能
+# Testing Tool Events Feature
 
-## 快速测试
+## Quick Test
 
-### 1. 启动后端服务
+### 1. Start the Backend Service
 
 ```powershell
 cd C:\Code\featbit\featbit-front-agent-api\examples\Kode.Agent.Boilerplate
@@ -10,7 +10,7 @@ $env:ASPNETCORE_ENVIRONMENT='Development'
 dotnet run
 ```
 
-### 2. 使用 curl 测试
+### 2. Test with curl
 
 ```bash
 curl -N http://localhost:5149/v1/chat/completions \
@@ -18,15 +18,15 @@ curl -N http://localhost:5149/v1/chat/completions \
   -d '{
     "model": "claude-3-5-sonnet-20241022",
     "messages": [
-      {"role": "user", "content": "请读取当前目录下的 README.md 文件，并告诉我它的内容"}
+      {"role": "user", "content": "Please read the README.md file in the current directory and tell me its content"}
     ],
     "stream": true
   }'
 ```
 
-### 3. 预期输出示例
+### 3. Expected Output Example
 
-你应该看到类似以下的输出：
+You should see output similar to the following:
 
 ```
 data: {"id":"chatcmpl-xxx","event":"tool:start","tool_call_id":"toolu_abc123","tool_name":"read_file","state":"Pending","timestamp":1234567890123}
@@ -44,9 +44,9 @@ data: {"id":"chatcmpl-xxx","object":"chat.completion.chunk","created":1234567890
 data: [DONE]
 ```
 
-### 4. 使用 Node.js 测试脚本
+### 4. Using Node.js Test Script
 
-创建 `test-tool-events.js`:
+Create `test-tool-events.js`:
 
 ```javascript
 const https = require('http');
@@ -54,7 +54,7 @@ const https = require('http');
 const data = JSON.stringify({
   model: 'claude-3-5-sonnet-20241022',
   messages: [
-    { role: 'user', content: '请列出当前目录的文件，然后读取 README.md 的内容' }
+    { role: 'user', content: 'Please list files in current directory, then read the content of README.md' }
   ],
   stream: true
 });
@@ -71,7 +71,7 @@ const options = {
 };
 
 const req = https.request(options, (res) => {
-  console.log(`状态码: ${res.statusCode}\n`);
+  console.log(`Status Code: ${res.statusCode}\n`);
 
   res.setEncoding('utf8');
   res.on('data', (chunk) => {
@@ -80,14 +80,14 @@ const req = https.request(options, (res) => {
       if (line.startsWith('data: ')) {
         const data = line.slice(6).trim();
         if (data === '[DONE]') {
-          console.log('\n[完成]');
+          console.log('\n[Completed]');
           continue;
         }
 
         try {
           const json = JSON.parse(data);
           
-          // Tool 事件
+          // Tool events
           if (json.event) {
             console.log(`\n[Tool ${json.event}]`, {
               name: json.tool_name,
@@ -96,7 +96,7 @@ const req = https.request(options, (res) => {
               error: json.error
             });
           }
-          // 文本内容
+          // Text content
           else if (json.choices) {
             const content = json.choices[0]?.delta?.content;
             if (content) {
@@ -104,54 +104,54 @@ const req = https.request(options, (res) => {
             }
           }
         } catch (e) {
-          // 忽略解析错误
+          // Ignore parse errors
         }
       }
     }
   });
 
   res.on('end', () => {
-    console.log('\n\n流结束');
+    console.log('\n\nStream ended');
   });
 });
 
 req.on('error', (e) => {
-  console.error(`请求错误: ${e.message}`);
+  console.error(`Request error: ${e.message}`);
 });
 
 req.write(data);
 req.end();
 ```
 
-运行:
+Run:
 ```bash
 node test-tool-events.js
 ```
 
-## 验证要点
+## Verification Points
 
-✅ **Tool Start 事件**: 每次调用工具时都应该收到 `tool:start` 事件
-✅ **Tool End 事件**: 工具执行完成后应该收到 `tool:end` 事件，包含 duration_ms
-✅ **Tool Error 事件**: 如果工具执行失败，应该收到 `tool:error` 事件，包含 error 信息
-✅ **文本内容**: 正常的文本响应应该继续正常工作
-✅ **事件顺序**: Tool 事件应该在相应的文本内容之前或之间发送
-✅ **完整性**: 每个 tool:start 都应该有对应的 tool:end 或 tool:error
+✅ **Tool Start Event**: Should receive `tool:start` event every time a tool is called
+✅ **Tool End Event**: Should receive `tool:end` event after tool execution completes, including duration_ms
+✅ **Tool Error Event**: Should receive `tool:error` event if tool execution fails, including error information
+✅ **Text Content**: Normal text responses should continue to work properly
+✅ **Event Order**: Tool events should be sent before or between corresponding text content
+✅ **Completeness**: Every tool:start should have a corresponding tool:end or tool:error
 
-## 日志检查
+## Log Inspection
 
-在后端日志中，你应该看到：
+In the backend logs, you should see:
 
 ```
 [Stream] Tool started: read_file (ID: toolu_abc123)
 [Stream] Tool completed: read_file (ID: toolu_abc123, Duration: 150ms)
 ```
 
-或者错误情况：
+Or in error cases:
 
 ```
 [Stream] Tool error: read_file (ID: toolu_abc123) - File not found
 ```
 
-## 前端集成
+## Frontend Integration
 
-参考 `TOOL_EVENTS_GUIDE.md` 中的 React 和 JavaScript 示例，将 tool 事件集成到你的前端应用中。
+Refer to the React and JavaScript examples in `TOOL_EVENTS_GUIDE.md` to integrate tool events into your frontend application.
