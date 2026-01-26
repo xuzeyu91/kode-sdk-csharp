@@ -18,10 +18,10 @@
 
   <!-- NuGet Package Metadata -->
   <PropertyGroup>
-    <!-- Version Control -->
-    <Version>0.1.0</Version>
-    <AssemblyVersion>0.1.0.0</AssemblyVersion>
-    <FileVersion>0.1.0.0</FileVersion>
+    <!-- Version Control (only set if not already defined by project or src/Directory.Build.props) -->
+    <Version Condition="'$(Version)' == ''">0.1.0</Version>
+    <AssemblyVersion Condition="'$(AssemblyVersion)' == ''">0.1.0.0</AssemblyVersion>
+    <FileVersion Condition="'$(FileVersion)' == ''">0.1.0.0</FileVersion>
     
     <!-- Package Information -->
     <PackageProjectUrl>https://github.com/JinFanZheng/kode-sdk-csharp</PackageProjectUrl>
